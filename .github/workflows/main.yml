@@ -87,31 +87,31 @@ jobs:
         context: ./src
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DockerImageName }}:${{ github.sha }}
 
-    helm-ci:
-      runs-on: ubuntu-latest
-      if: ${{ github.ref_name == 'main' }}
-      needs: python-ci
-      steps:
-        - name: Set up Helm on runner
-          uses: azure/setup-helm@v4.2.0
+  helm-ci:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref_name == 'main' }}
+    needs: python-ci
+    steps:
+      - name: Set up Helm on runner
+        uses: azure/setup-helm@v4.2.0
 
-        - name: Download helm artifacts
-          uses: actions/download-artifact@v4
-          with:
-            name: helm-artifacts
-            path: .
+      - name: Download helm artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-artifacts
+          path: .
 
-        - name: Lint Helm
-          run: helm lint ./kube2py/
+      - name: Lint Helm
+        run: helm lint ./kube2py/
 
-        - name: Template Helm
-          run: helm template kube2py ./kube2py -f ./kube2py/values.yaml
+      - name: Template Helm
+        run: helm template kube2py ./kube2py -f ./kube2py/values.yaml
 
-        - name: Package Helm in tgz archive
-          run: helm package ./kube2py/
+      - name: Package Helm in tgz archive
+        run: helm package ./kube2py/
 
-        - name: Upload Helm package
-          uses: actions/upload-artifact@v4
-          with:
-            name: helm-package
-            path: ./*.tgz
+      - name: Upload Helm package
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-package
+          path: ./*.tgz
