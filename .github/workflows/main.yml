@@ -54,13 +54,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: python-artifacts
-          path: ../helm-charts
+          path: .
 
       - name: Upload helm artifacts
         uses: actions/download-artifact@v4
         with:
           name: helm-artifacts
-          path: .
+          path: ../helm-charts
 
   docker-ci:
     runs-on: ubuntu-latest
